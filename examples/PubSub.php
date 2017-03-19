@@ -13,10 +13,21 @@ require __DIR__.'/../autoload.php';
 
 $client = new Predis\Async\Client('tcp://127.0.0.1:6379');
 
-$client->connect(function ($client) {
-    echo "Connected to Redis, now listening for incoming messages...\n";
+class A
+{
+    public $pubsub;
 
-    $client->pubsub('nrk:channel', function ($event, $pubsub) {
+    protected $i = 0;
+
+    protected $client;
+
+    public function __construct($client)
+    {
+        $this->client = $client;
+    }
+
+    public function onMessage($event, $pubsub)
+    {
         $message = "Received message `%s` from channel `%s` [type: %s].\n";
 
         $feedback = sprintf($message,
@@ -30,7 +41,30 @@ $client->connect(function ($client) {
         if ($event->payload === 'quit') {
             $pubsub->quit();
         }
-    });
+    }
+
+    public function checkMemory($timer)
+    {
+        echo 'memory: ' .  memory_get_usage() . PHP_EOL;
+
+        if( (++$this->i) >= 10)
+        {
+            $this->pubsub->quit();
+            $this->client->getEventLoop()->stop();
+        }
+    }
+}
+
+$a = new A($client);
+
+$client->connect(function ($client) use($a) {
+    echo "Connected to Redis, now listening for incoming messages...\n";
+
+    $a->pubsub = $client->pubsub('nrk:channel', [$a, 'onMessage']);
 });
 
-$client->getEventLoop()->run();
+$loop = $client->getEventLoop();
+
+$loop->addPeriodicTimer(5, [$a, 'checkMemory']);
+
+$loop->run();

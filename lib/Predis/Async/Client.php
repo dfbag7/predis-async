@@ -117,7 +117,7 @@ class Client
         }
 
         $parameters = $this->filterParameters($parameters);
-        $connection = new StreamConnection($parameters, $this->options->eventloop);
+        $connection = new StreamConnection($this->options->eventloop, $parameters);
 
         if (isset($options->on_error)) {
             $this->setErrorCallback($connection, $options->on_error);

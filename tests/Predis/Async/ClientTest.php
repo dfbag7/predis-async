@@ -111,7 +111,7 @@ class ClientTest extends PredisAsyncTestCase
         $parameters = $this->getParameters();
         $eventloop  = $this->getEventLoop();
 
-        $connection = new StreamConnection($parameters, $eventloop);
+        $connection = new StreamConnection($eventloop, $parameters);
 
         $client = new Client($connection, $eventloop);
 
@@ -131,7 +131,7 @@ class ClientTest extends PredisAsyncTestCase
      */
     public function testConnectionAndClientMustShareSameEventLoop()
     {
-        $connection = new StreamConnection($this->getParameters(), $this->getEventLoop());
+        $connection = new StreamConnection($this->getEventLoop(), $this->getParameters());
         $client = new Client($connection);
     }
 

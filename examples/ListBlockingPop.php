@@ -22,7 +22,7 @@ $consumer->connect(function ($consumer) use ($producer) {
 
     $start = microtime(true);
 
-    $consumer->blpop('nrk:queue', 10, function ($response) use ($consumer, $producer, $start) {
+    $consumer->blpop(['nrk:queue'], 10, function ($response) use ($consumer, $producer, $start) {
         list($queue, $stop) = $response;
 
         $seconds = round((float) $stop - $start, 3);

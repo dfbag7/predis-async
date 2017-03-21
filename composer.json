@@ -1,5 +1,5 @@
 {
-    "name": "dfbag7/predis-async",
+    "name": "predis/predis-async",
     "type": "library",
     "description": "Asynchronous version of Predis with no dependence on php-iredis and supported by Laravel v.4.2",
     "keywords": ["nosql", "redis", "predis"],

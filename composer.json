@@ -19,7 +19,7 @@
     "require": {
         "php": ">=5.4.0",
         "predis/predis": "0.8.*",
-        "react/event-loop": "~0.4",
+        "react/event-loop": "0.4.3",
         "clue/redis-protocol": "~0.3"
     },
     "autoload": {
